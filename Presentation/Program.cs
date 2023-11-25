@@ -1,5 +1,6 @@
 using KocUniversityCourseManagement.Infrastructure;
 using KocUniversityCourseManagement.Presentation.Middlewares;
+using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
 using StackExchange.Redis;
 
@@ -17,6 +18,9 @@ builder.Services.AddSingleton<IConnection>(sp =>
     };
     return factory.CreateConnection();
 });
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 
 
 builder.Services.AddControllers();
