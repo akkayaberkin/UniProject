@@ -21,3 +21,8 @@ This project integrates RabbitMQ, PostgreSQL, Redis, Keycloak, and Docker for da
 - **RabbitMQ Integration**: Transferring requests written in Redis to RabbitMQ for processing.
 - **Keycloak Integration**: Implementing user management and security protocols.
 - **Docker Integration**: Running and managing the application within Docker containers.
+
+- 
+https://youtu.be/sfFepC3LKvY
+https://youtu.be/6ncBsIgihiM
+https://youtu.be/sw7y-QTGYEY
