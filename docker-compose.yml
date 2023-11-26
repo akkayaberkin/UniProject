@@ -35,3 +35,16 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - REDIS_HOSTNAME=redis
       - RABBITMQ_HOSTNAME=rabbitmq
+
+  postgresql:
+    image: postgres
+    environment:
+      POSTGRES_USER: "postgres_user"  # Burayı istediğiniz kullanıcı adıyla değiştirin
+      POSTGRES_PASSWORD: "postgres_password"  # Burayı güvenli bir şifreyle değiştirin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
