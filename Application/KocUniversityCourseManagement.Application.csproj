@@ -12,9 +12,11 @@
   <ItemGroup>
     <None Remove="Interfaces\" />
     <None Remove="Services\" />
+    <None Remove="Dto\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
     <Folder Include="Services\" />
+    <Folder Include="Dto\" />
   </ItemGroup>
 </Project>
