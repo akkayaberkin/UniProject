@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\KocUniversityCourseManagement.Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure\KocUniversityCourseManagement.Infrastructure.csproj">
+    <ProjectReference Include="..\Application\KocUniversityCourseManagement.Application.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>

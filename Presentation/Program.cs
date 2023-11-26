@@ -1,3 +1,5 @@
+using KocUniversityCourseManagement.Application.Interfaces;
+using KocUniversityCourseManagement.Application.Services;
 using KocUniversityCourseManagement.Infrastructure;
 using KocUniversityCourseManagement.Presentation.Middlewares;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +24,7 @@ builder.Services.AddSingleton<IConnection>(sp =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 
-
+builder.Services.AddScoped<IUserInterface, UserService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

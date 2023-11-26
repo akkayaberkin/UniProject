@@ -23,24 +23,11 @@ services:
     ports:
       - "8080:8080"
 
-  myapp: 
-    build: . 
-    depends_on:
-      - redis
-      - rabbitmq
-      - keycloak
-    ports:
-      - "5000:80" 
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - REDIS_HOSTNAME=redis
-      - RABBITMQ_HOSTNAME=rabbitmq
-
   postgresql:
     image: postgres
     environment:
-      POSTGRES_USER: "postgres_user"  # Burayı istediğiniz kullanıcı adıyla değiştirin
-      POSTGRES_PASSWORD: "postgres_password"  # Burayı güvenli bir şifreyle değiştirin
+      POSTGRES_USER: "postgres_user"
+      POSTGRES_PASSWORD: "postgres_password"
     ports:
       - "5432:5432"
     volumes:
