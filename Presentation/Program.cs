@@ -1,6 +1,9 @@
 using KocUniversityCourseManagement.Application.Interfaces;
 using KocUniversityCourseManagement.Application.Services;
+using KocUniversityCourseManagement.Domain;
+using KocUniversityCourseManagement.Domain.Interfaces;
 using KocUniversityCourseManagement.Infrastructure;
+using KocUniversityCourseManagement.Infrastructure.Repositories;
 using KocUniversityCourseManagement.Presentation.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
@@ -25,6 +28,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 
 builder.Services.AddScoped<IUserInterface, UserService>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -50,7 +55,6 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("profile");
     options.Scope.Add("email");
 });
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

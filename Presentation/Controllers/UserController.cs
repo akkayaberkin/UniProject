@@ -32,7 +32,7 @@ namespace KocUniversityCourseManagement.Presentation.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public async Task<IActionResult> CreateUser([FromBody] ApplicationUser user)
         {
             if (user == null)

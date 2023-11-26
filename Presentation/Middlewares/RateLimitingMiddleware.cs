@@ -6,8 +6,8 @@ using System.Text.Json;
 
 namespace KocUniversityCourseManagement.Presentation.Middlewares
 {
-	public class RateLimitingMiddleware
-	{
+    public class RateLimitingMiddleware
+    {
         private readonly RequestDelegate _next;
         private readonly IConnectionMultiplexer _redis;
         private readonly IConnection _rabbitMQConnection;
@@ -27,8 +27,8 @@ namespace KocUniversityCourseManagement.Presentation.Middlewares
             var rateLimitKey = $"ratelimit:{remoteIp}";
 
             var db = _redis.GetDatabase();
-            var rateLimitReached = db.StringIncrement(rateLimitKey) > 10; // saniyede 10 istek
-            db.KeyExpire(rateLimitKey, TimeSpan.FromSeconds(1)); 
+            var rateLimitReached = db.StringIncrement(rateLimitKey) > 10; 
+            db.KeyExpire(rateLimitKey, TimeSpan.FromSeconds(1));
 
             if (rateLimitReached)
             {
@@ -37,20 +37,33 @@ namespace KocUniversityCourseManagement.Presentation.Middlewares
                 return;
             }
 
-            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new
+            var originalBodyStream = context.Request.Body; 
+            using (var newBodyStream = new MemoryStream())
             {
-                Path = context.Request.Path,
-                Method = context.Request.Method,
-                Query = context.Request.QueryString,
-                Body = await new StreamReader(context.Request.Body).ReadToEndAsync()
-            }));
+                await context.Request.Body.CopyToAsync(newBodyStream);
+                newBodyStream.Seek(0, SeekOrigin.Begin); 
 
-            _rabbitMQChannel.BasicPublish(exchange: "",
-                                          routingKey: "requestQueue",
-                                          basicProperties: null,
-                                          body: body);
+                var bodyText = await new StreamReader(newBodyStream).ReadToEndAsync();
+                var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new
+                {
+                    Path = context.Request.Path,
+                    Method = context.Request.Method,
+                    Query = context.Request.QueryString,
+                    Body = bodyText
+                }));
 
-            await context.Response.WriteAsync("Request queued for asynchronous processing.");
+                _rabbitMQChannel.BasicPublish(exchange: "",
+                                              routingKey: "requestQueue",
+                                              basicProperties: null,
+                                              body: body);
+
+                newBodyStream.Seek(0, SeekOrigin.Begin); 
+                context.Request.Body = newBodyStream;
+
+                await _next(context); 
+
+                context.Request.Body = originalBodyStream; 
+            }
         }
     }
 }
